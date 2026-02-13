@@ -16,13 +16,22 @@ const db = getDb();
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 const COOKIE_SECRET = process.env.COOKIE_SECRET!;
+type Variables = {
+  userId: number;
+};
 
-const app = new Hono().basePath("/api");
+const app = new Hono<{ Variables: Variables }>().basePath("/api");
+
 
 app.use("*", logger());
 
 
-const authMiddleware = async (c: any, next: any) => {
+
+const authMiddleware = async (
+  c: any,
+  next: any
+) => {
+
   try {
     const token = await getSignedCookie(
       c,
